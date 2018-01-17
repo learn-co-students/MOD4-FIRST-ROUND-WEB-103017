@@ -4,17 +4,16 @@ import Transaction from './Transaction';
 const TransactionsList = (props) => {
  let transactions = props.transactions
  let newTrans
- console.log("TL", props);
 
- newTrans = transactions.map((trans) => {
+ newTrans = transactions.map((trans, i) => {
    return(
      <Transaction
        data={trans}
-       />
+       key={i}
+      />
    );
   })
 
-console.log("TL:", newTrans);
 
   return (
       <table className="ui celled striped padded table">
