@@ -3,6 +3,8 @@ import TransactionsList from './TransactionsList'
 import Search from './Search'
 // import {transactions} from '../transactionsData'
 
+const URL ='https://boiling-brook-94902.herokuapp.com/transactions';
+
 class AccountContainer extends Component {
 
   constructor() {
@@ -19,10 +21,10 @@ class AccountContainer extends Component {
   }
 
   getAPIData = () => {
-    return fetch('https://boiling-brook-94902.herokuapp.com/transactions').then(resp => resp.json())
+    return fetch(URL).then(resp => resp.json())
   }
 
-  componentDidMount(){
+  setAllTransactions = () => {
     this.getAPIData().then(json => {
       this.setState({
         transactions: json
@@ -30,32 +32,39 @@ class AccountContainer extends Component {
     })
   }
 
-  check
+  setFilteredTransactions = (currentSearchTerm) => {
+    this.getAPIData().then(json => {
+      const filteredTransactions = json.filter(trn => {
+        return (this.checkIncludes(trn.description, currentSearchTerm) || this.checkIncludes(trn.category, currentSearchTerm))
+      })
+      this.setState({
+        transactions: filteredTransactions
+      })
+    })
+  }
+
+  componentDidMount(){
+    this.setAllTransactions()
+  }
+
+  checkIncludes = (str, subStr) => {
+    return str.toLowerCase().includes(subStr.toLowerCase())
+  }
 
   filterTransactions = () =>{
     const currentSearchTerm = this.state.searchTerm;
     if (currentSearchTerm) {
-      this.getAPIData().then(json => {
-        const filteredTransactions = json.filter(trn => {
-          return (trn.description.toLowerCase().includes(currentSearchTerm.toLowerCase()) || trn.category.toLowerCase().includes(currentSearchTerm.toLowerCase()))
-        })
-        this.setState({
-          transactions: filteredTransactions
-        })
-      })
+      this.setFilteredTransactions(currentSearchTerm)
     }else {
-      this.getAPIData().then(json => {
-        this.setState({
-          transactions: json
-        })
-      })
+      this.setAllTransactions()
     }
   }
 
   handleChange = (event) => {
     // your code here
+    const newSearchTerm = event.target.value;
     this.setState({
-      searchTerm: event.target.value
+      searchTerm: newSearchTerm
     }, this.filterTransactions)
   }
 
