@@ -13,7 +13,7 @@ class AccountContainer extends Component {
     // then replace the default transactions with a call to the API
     this.state = {
       transactions: transactions,
-      value : ""
+      value: ""
     }
 
     this.handleChange = this.handleChange.bind(this);
@@ -26,15 +26,19 @@ class AccountContainer extends Component {
   }
 
   handleChange(event) {
-    this.setState({value: document.getElementById("searchBar").value}, () => console.log(this.state))
+    this.setState({value: event.target.value}, (console.log(this.state.value)));
   }
 
   render() {
-    // would then set a filteredTransactions array here by filtering through transaction array looking for matching text (i.e. .filter(transaction => transaction.description.includes(this.state.value) || transaction.category.includes(this.state.value)))
+    let filteredTransactions = this.state.transactions.filter(transaction => (
+      transaction.description.toLowerCase().includes(this.state.value.toLowerCase()) ||
+      transaction.category.toLowerCase().includes(this.state.value.toLowerCase())
+    ))
+
     return (
       <div>
         <Search handleChange={this.handleChange} value={this.state.value}/>
-        <TransactionsList transactions={this.state.transactions}/>
+        <TransactionsList transactions={filteredTransactions}/>
       </div>
     )
   }

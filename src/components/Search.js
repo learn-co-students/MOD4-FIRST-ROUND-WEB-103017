@@ -7,10 +7,11 @@ const Search = (props) => {
     <div className="ui huge fluid icon input">
       <input
         type="text"
-        id="searchBar"
+        onChange={(event) => props.handleChange(event)}
         placeholder={"Search your Recent Transactions"}
+        value={props.value}
       />
-      <i onClick={() => props.handleChange(event)}className="circular search link icon"></i>
+      <i className="circular search link icon"></i>
     </div>
   )
 }
